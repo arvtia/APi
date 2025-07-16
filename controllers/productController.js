@@ -53,3 +53,25 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ error: err.message }); // Server Error
   }
 };
+
+exports.getSingleProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Make sure the ID is valid
+    if (!id) {
+      return res.status(400).json({ error: "Product ID is required." });
+    }
+
+    const product = await Products.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+
+    res.status(200).json(product);
+  } catch (err) {
+    console.error("Error fetching product:", err);
+    res.status(500).json({ error: "Server error while retrieving product." });
+  }
+};
